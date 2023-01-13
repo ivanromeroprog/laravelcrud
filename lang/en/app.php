@@ -1,16 +1,18 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | App Language Lines
-    |--------------------------------------------------------------------------
-    */
-
+    'actions' => 'Actions',
+    'delete' => 'Delete',
+    'edit' => 'Edit',
     'user' => [
-        'user' => 'User',
+        'email' => 'E-mail',
+        'name' => 'Name',
         'new' => 'New User',
-    ]
-
+        'number' => 'No',
+        'roles' => 'Roles',
+        'user' => 'User',
+        'users' => 'Users',
+    ],
+    'view' => 'View',
+    'welcome' => 'Welcome!',
 ];
