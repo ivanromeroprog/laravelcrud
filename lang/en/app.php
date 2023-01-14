@@ -6,7 +6,18 @@ return [
     'dashboard' => 'Dashboard',
     'delete' => 'Delete',
     'edit' => 'Edit',
+    'login' => [
+        'email' => 'E-mail',
+        'forgotpassword' => 'Forgot your password?',
+        'login' => 'Login',
+        'password' => 'Password',
+        'register' => 'Register',
+        'rememberme' => 'Remember me',
+    ],
     'logout' => 'Logout',
+    'role' => [
+        'roles' => 'Roles',
+    ],
     'save' => 'Save',
     'user' => [
         'confirm-password' => 'Confirm Password',

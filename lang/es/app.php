@@ -6,7 +6,18 @@ return [
     'dashboard' => 'Panel de Control',
     'delete' => 'Eliminar',
     'edit' => 'Editar',
+    'login' => [
+        'email' => 'E-mail',
+        'forgotpassword' => '¿Olvidaste tu contraseña?',
+        'login' => 'Iniciar sesión',
+        'password' => 'Password',
+        'register' => 'Registrarse',
+        'rememberme' => 'Mantener sesión iniciada',
+    ],
     'logout' => 'Cerrar Sesión',
+    'role' => [
+        'roles' => 'Roles',
+    ],
     'save' => 'Guardar',
     'user' => [
         'confirm-password' => 'Confirmar Password',

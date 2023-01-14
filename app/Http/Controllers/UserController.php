@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
@@ -56,8 +58,16 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
-        $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        try {
+            DB::transaction(
+                function () use ($input, $request) {
+                    $user = User::create($input);
+                    $user->assignRole($request->input('roles'));
+                }
+            );
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors([__('app.dberror')]);
+        }
 
         return redirect()->route('users.index')
             ->with('success', __('user.created'));
@@ -82,7 +92,18 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
+
+        return view(
+            'users.edit',
+            [
+                'user' => $user,
+                'roles' => $roles,
+                'userRole' => $userRole
+            ]
+        );
     }
 
     /**
@@ -94,7 +115,43 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'same:confirm-password',
+            'roles' => 'required'
+        ], [],  [
+            'confirm-password' => __('app.user.confirm-password'),
+            'password' => __('app.user.password'),
+            'name' => __('app.user.name'),
+            'roles' => __('app.user.roles'),
+            'email' => __('app.user.email')
+        ]);
+
+        $input = $request->all();
+        if (!empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, array('password'));
+        }
+
+        $user = User::find($id);
+
+        try {
+            DB::transaction(
+                function () use ($user, $input, $request) {
+                    $user->update($input);
+                    $user->syncRoles($request->input('roles'));
+                    //DB::table('model_has_roles')->where('model_id', $id)->delete();
+                    //$user->assignRole($request->input('roles'));
+                }
+            );
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors([__('app.dberror')]);
+        }
+
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully');
     }
 
     /**

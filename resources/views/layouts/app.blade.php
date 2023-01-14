@@ -35,8 +35,8 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @auth
-                            <li><a class="nav-link" href="{{ route('users.index') }}">Usuarios</a></li>
-                            <li><a class="nav-link" href="{{ route('roles.index') }}">Roles</a></li>
+                            <li><a class="nav-link" href="{{ route('users.index') }}">{{ __('app.user.users') }}</a></li>
+                            <li><a class="nav-link" href="{{ route('roles.index') }}">{{ __('app.role.roles') }}</a></li>
                         @endauth
                     </ul>
 
@@ -46,13 +46,13 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('app.login.login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('app.login.register') }}</a>
                                 </li>
                             @endif
                         @else

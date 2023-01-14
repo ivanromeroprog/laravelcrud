@@ -31,7 +31,7 @@
     </div>
     <div class="form-group mt-2">
         <strong>{{ __('app.user.confirm-password') }}:</strong>
-        {!! Form::password(__('app.user.confirm-password'), [
+        {!! Form::password('confirm-password', [
             'placeholder' => __('app.user.confirm-password'),
             'class' => 'form-control',
         ]) !!}
