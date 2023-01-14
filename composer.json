@@ -55,7 +55,7 @@
         "laravel": {
             "dont-discover": []
         }
-    },
+    }, 
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
