@@ -38,7 +38,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        $permission = Permission::all();
+
+        return view('roles.create', ['permission' => $permission]);
     }
 
     /**
@@ -49,7 +51,16 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required',
+        ]);
+
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->input('permission'));
+
+        return redirect()->route('roles.index')
+            ->with('success', 'Role created successfully');
     }
 
     /**
@@ -71,7 +82,16 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::find($id);
+        $permission = Permission::get();
+        $rolePermissions = $role->getAllPermissions()->pluck('id', 'id')->all();
+
+        return view('roles.edit', [
+            'role' => $role,
+            'permission' => $permission,
+            'rolePermissions' => $rolePermissions,
+            'disabled' => false
+        ]);
     }
 
     /**
@@ -83,7 +103,6 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**

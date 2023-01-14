@@ -7,14 +7,14 @@
         </div>
         <div class="pull-right">
         @can('role-create')
-            <a class="btn btn-success" href="{{ route('roles.create') }}"> {{ __('app.role.create') }} </a>
+            <a class="btn btn-success" href="{{ route('roles.create') }}"> {{ __('app.role.new') }} </a>
         @endcan
         </div>
     </div>
 </div>
 @if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
+    <div class="alert alert-success mt-2">
+        {{ $message }}
     </div>
 @endif
 <table class="table table-striped mt-2">

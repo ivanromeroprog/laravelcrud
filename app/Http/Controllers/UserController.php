@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::pluck('name', 'name')->all();
+        $roles = Role::all();
         return view('users.create', compact('roles'));
     }
 
@@ -70,7 +70,7 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index')
-            ->with('success', __('user.created'));
+            ->with('success', __('app.user.created'));
     }
 
     /**
@@ -81,7 +81,20 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        $roles = Role::all();
+
+        $userRoles = $user->roles->pluck('id', 'id')->all();
+
+        return view(
+            'users.edit',
+            [
+                'user' => $user,
+                'roles' => $roles,
+                'userRoles' => $userRoles,
+                'disabled' => true
+            ]
+        );
     }
 
     /**
@@ -93,15 +106,19 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name', 'name')->all();
-        $userRole = $user->roles->pluck('name', 'name')->all();
+        $roles = Role::all();
+
+        $userRoles = $user->roles->pluck('id', 'id')->all();
+
+
 
         return view(
             'users.edit',
             [
                 'user' => $user,
                 'roles' => $roles,
-                'userRole' => $userRole
+                'userRoles' => $userRoles,
+                'disabled' => false
             ]
         );
     }
@@ -151,7 +168,7 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index')
-            ->with('success', 'User updated successfully');
+            ->with('success', __('app.user.updated'));
     }
 
     /**
