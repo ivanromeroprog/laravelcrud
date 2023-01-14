@@ -1,16 +1,11 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex align-content-start justify-center">
-        <div>
-            <a class="btn btn-secondary" href="{{ route('users.index') }}"> {{ __('app.back') }}</a>
-        </div>
-        <div>
-                <h2 class="m-0 ms-2">{{ __('app.user.new') }}</h2>
-        </div>
-    </div>
+
+                <h2 class="m-2 ms-0">{{ __('app.user.new') }}</h2>
+
     @if (count($errors) > 0)
         <div class="alert alert-danger">
-            <ul>
+            <ul class="m-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -47,9 +42,14 @@
         {!! Form::select('roles[]', $roles, [], ['class' => 'form-control', 'multiple']) !!}
     </div>
 
-    <div class="mt-2">
-        <button type="submit" class="btn btn-primary">{{ __('app.save') }}</button>
+    <div class="row mt-2">
+        <div class="col text-start"><a class="btn btn-secondary" href="{{ route('users.index') }}"> {{ __('app.back') }}</a></div>
+        <div class="col text-end"><button type="submit" class="btn btn-primary">{{ __('app.save') }}</button></div>
     </div>
+        
+
+        
+
     </div>
     {!! Form::close() !!}
 @endsection

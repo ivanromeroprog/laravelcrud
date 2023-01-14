@@ -45,6 +45,12 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
+        ], [], [
+            'confirm-password' => __('app.user.confirm-password'),
+            'password' => __('app.user.password'),
+            'name' => __('app.user.name'),
+            'roles' => __('app.user.roles'),
+            'email' => __('app.user.email')
         ]);
 
         $input = $request->all();
