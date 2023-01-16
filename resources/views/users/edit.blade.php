@@ -18,6 +18,16 @@
             </ul>
         </div>
     @endif
+
+    @if (isset($superadmin))
+        <div class="alert alert-warning mt-2">
+            <ul class="m-0">
+                {{ __('app.user.superadmin') }}
+            </ul>
+        </div>
+    @endif
+
+
 {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
 <div class="form-group mt-2">
     <strong>{{ __('app.user.name') }}:</strong>
@@ -51,7 +61,7 @@
             'roles[]',
             $value->id,
             old('roles.'.$k, in_array($value->id, $userRoles)),
-            ['class' => 'name', $disabled ? 'disabled' : null])
+            ['class' => 'name', $disabled || isset($superadmin) ? 'disabled' : null])
          }}
         {{ $value->name }}</label>
     <br/>

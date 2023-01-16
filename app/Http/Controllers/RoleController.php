@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -13,7 +14,7 @@ class RoleController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index']]);
         $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
@@ -56,11 +57,19 @@ class RoleController extends Controller
             'permission' => 'required',
         ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+        try {
+            DB::transaction(
+                function () use ($request) {
+                    $role = Role::create(['name' => $request->input('name')]);
+                    $role->syncPermissions($request->input('permission'));
+                }
+            );
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors([__('app.dberror')]);
+        }
 
         return redirect()->route('roles.index')
-            ->with('success', 'Role created successfully');
+            ->with('success', __('app.role.created'));
     }
 
     /**
@@ -71,7 +80,16 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::find($id);
+        $permission = Permission::get();
+        $rolePermissions = $role->getAllPermissions()->pluck('id', 'id')->all();
+
+        return view('roles.edit', [
+            'role' => $role,
+            'permission' => $permission,
+            'rolePermissions' => $rolePermissions,
+            'disabled' => true
+        ]);
     }
 
     /**
@@ -90,7 +108,8 @@ class RoleController extends Controller
             'role' => $role,
             'permission' => $permission,
             'rolePermissions' => $rolePermissions,
-            'disabled' => false
+            'disabled' => ($id == 1),
+            'superadmin' => ($id == 1)
         ]);
     }
 
@@ -103,6 +122,31 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'name' => 'required',
+            'permission' => 'required',
+        ]);
+
+        $role = Role::find($id);
+
+        if ($id == 1) {
+            return redirect()->back()->withErrors([__('app.role.superadmin')]);
+        }
+
+        try {
+            DB::transaction(
+                function () use ($role, $request) {
+                    $role->name = $request->input('name');
+                    $role->save();
+                    $role->syncPermissions($request->input('permission'));
+                }
+            );
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors([__('app.dberror')]);
+        }
+
+        return redirect()->route('roles.index')
+            ->with('success', __('app.role.updated'));
     }
 
     /**
@@ -113,6 +157,12 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id == 1) {
+            return redirect()->back()->withErrors([__('app.role.superadmin')]);
+        }
+
+        DB::table('roles')->where('id', $id)->delete();
+        return redirect()->route('roles.index')
+            ->with('success', __('app.role.deleted'));
     }
 }

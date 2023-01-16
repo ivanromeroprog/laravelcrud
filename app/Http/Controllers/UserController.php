@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /** 
+     * Permissions
+     */
+    function __construct()
+    {
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -110,15 +121,14 @@ class UserController extends Controller
 
         $userRoles = $user->roles->pluck('id', 'id')->all();
 
-
-
         return view(
             'users.edit',
             [
                 'user' => $user,
                 'roles' => $roles,
                 'userRoles' => $userRoles,
-                'disabled' => false
+                'disabled' => false,
+                'superadmin' => ($id == 1)
             ]
         );
     }
@@ -136,7 +146,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => ($id == 1) ? '' : 'required'
         ], [],  [
             'confirm-password' => __('app.user.confirm-password'),
             'password' => __('app.user.password'),
@@ -154,11 +164,13 @@ class UserController extends Controller
 
         $user = User::find($id);
 
+
+
         try {
             DB::transaction(
                 function () use ($user, $input, $request) {
                     $user->update($input);
-                    $user->syncRoles($request->input('roles'));
+                    if ($user->id != 1) $user->syncRoles($request->input('roles'));
                     //DB::table('model_has_roles')->where('model_id', $id)->delete();
                     //$user->assignRole($request->input('roles'));
                 }
@@ -179,6 +191,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id == 1) {
+            return redirect()->back()->withErrors([__('app.user.superadmin')]);
+        }
+
+        DB::table('users')->where('id', $id)->delete();
+        return redirect()->route('users.index')
+            ->with('success', __('app.user.deleted'));
     }
 }
