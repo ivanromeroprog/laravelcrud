@@ -36,6 +36,6 @@ php artisan migrate
 php artisan serve
 ```
 
-* Datos de acceso:
-    * E-mail: superadmin@example.com
-    * Contraseña: admin
+## Datos de acceso
+* E-mail: superadmin@example.com
+* Contraseña: admin
