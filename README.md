@@ -1,6 +1,7 @@
 # Laravel CRUD
 
 CRUD de Usuarios y Roles creado con Laravel 9.X.
+Requiere PHP 8.0.2 o superior y MySQL/MariaDB.
 
 ## Instalación
 
