@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    @if (isset($superadmin))
+    @if (isset($superadmin) && $superadmin)
         <div class="alert alert-warning mt-2">
             <ul class="m-0">
                 {{ __('app.user.superadmin') }}
@@ -61,7 +61,7 @@
             'roles[]',
             $value->id,
             old('roles.'.$k, in_array($value->id, $userRoles)),
-            ['class' => 'name', $disabled || isset($superadmin) ? 'disabled' : null])
+            ['class' => 'name', $disabled || isset($superadmin) && $superadmin ? 'disabled' : null])
          }}
         {{ $value->name }}</label>
     <br/>

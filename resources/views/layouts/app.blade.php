@@ -35,8 +35,12 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @auth
-                            <li><a class="nav-link" href="{{ route('users.index') }}">{{ __('app.user.users') }}</a></li>
+                        @canany(['user-list','user-create','user-edit','user-delete'])
+                        <li><a class="nav-link" href="{{ route('users.index') }}">{{ __('app.user.users') }}</a></li>
+                        @endcan
+                        @canany(['role-list','role-create','role-edit','role-delete'])
                             <li><a class="nav-link" href="{{ route('roles.index') }}">{{ __('app.role.roles') }}</a></li>
+                        @endcan
                         @endauth
                     </ul>
 

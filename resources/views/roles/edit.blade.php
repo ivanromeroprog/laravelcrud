@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    @if (isset($superadmin))
+    @if (isset($superadmin) && $superadmin)
         <div class="alert alert-warning mt-2">
             <ul class="m-0">
                 {{ __('app.role.superadmin') }}
