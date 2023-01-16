@@ -28,5 +28,5 @@ php artisan serve
 ```
 
 * Datos de acceso:
-** E-mail: superadmin@example.com
-** Contraseña: admin
+    * E-mail: superadmin@example.com
+    * Contraseña: admin
