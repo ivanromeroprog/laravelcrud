@@ -3,6 +3,10 @@
 CRUD de Usuarios y Roles creado con Laravel 9.X.
 Requiere PHP 8.0.2 o superior y MySQL/MariaDB.
 
+## Datos de acceso
+* E-mail: superadmin@example.com
+* Contraseña: admin
+
 ## Instalación
 
 * Clonar repositorio.
@@ -35,7 +39,3 @@ php artisan migrate
 ```
 php artisan serve
 ```
-
-## Datos de acceso
-* E-mail: superadmin@example.com
-* Contraseña: admin
